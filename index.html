@@ -12,6 +12,7 @@
       --text: #c9d1d9;
       --accent: #58a6ff;
       --code-bg: #0b0e14;
+      --success: #238636;
     }
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -22,37 +23,42 @@
       padding: 2rem 1rem;
     }
     .container {
-      max-width: 860px;
+      max-width: 900px;
       margin: 0 auto;
     }
     header {
       border-bottom: 1px solid var(--border);
       padding-bottom: 1.5rem;
-      margin-bottom: 2rem;
+      margin-bottom: 2.5rem;
     }
     h1 {
       color: #fff;
-      font-size: 2.2rem;
+      font-size: 2.4rem;
       margin-bottom: 0.5rem;
     }
     h2 {
       color: #fff;
-      margin-top: 2rem;
+      margin-top: 2.5rem;
       border-bottom: 1px solid var(--border);
       padding-bottom: 0.4rem;
+    }
+    h3 {
+      color: #fff;
+      margin-top: 1.5rem;
     }
     .author-box {
       background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 1rem 1.2rem;
+      border-left: 4px solid var(--accent);
+      border-radius: 6px;
+      padding: 1.2rem;
       margin: 1.5rem 0;
       display: flex;
       flex-wrap: wrap;
-      gap: 1.5rem;
+      gap: 2rem;
     }
     .author-item {
-      font-size: 0.95rem;
+      font-size: 1rem;
     }
     .author-item strong {
       color: #fff;
@@ -68,10 +74,11 @@
       background-color: var(--code-bg);
       border: 1px solid var(--border);
       border-radius: 6px;
-      padding: 1rem;
+      padding: 1.2rem;
       overflow-x: auto;
-      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      font-family: "SFMono-Regular", Consolas, monospace;
       font-size: 0.9rem;
+      margin: 1rem 0;
     }
     code {
       font-family: inherit;
@@ -79,28 +86,55 @@
     }
     .badge {
       display: inline-block;
-      padding: 0.25rem 0.65rem;
-      font-size: 0.8rem;
+      padding: 0.3rem 0.8rem;
+      font-size: 0.85rem;
       font-weight: 600;
       border-radius: 20px;
-      background-color: #238636;
+      background-color: var(--success);
       color: #fff;
       margin-bottom: 1rem;
     }
     .grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-      margin: 1rem 0;
+      gap: 1.5rem;
+      margin: 1.5rem 0;
     }
     .card {
       background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 1.2rem;
+      border-radius: 8px;
+      padding: 1.5rem;
     }
-    @media (max-width: 600px) {
+    .step-list {
+      list-style: none;
+      padding: 0;
+    }
+    .step-list li {
+      background: var(--card);
+      margin-bottom: 1rem;
+      padding: 1rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .step-num {
+      background: var(--accent);
+      color: #000;
+      font-weight: bold;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    @media (max-width: 700px) {
       .grid { grid-template-columns: 1fr; }
+      .author-box { flex-direction: column; gap: 0.5rem; }
     }
   </style>
 </head>
@@ -109,7 +143,7 @@
     <header>
       <span class="badge">現代軟體工程 (Modern Software Engineering) · HW1</span>
       <h1>從殼層到底層：重新理解 HTTP</h1>
-      <p>A ground-up implementation demystifying HTTP over raw TCP/TLS sockets.</p>
+      <p>A comprehensive, ground-up implementation demystifying HTTP over raw TCP/TLS sockets.</p>
       
       <div class="author-box">
         <div class="author-item"><strong>Student Name:</strong> 范權榮</div>
@@ -118,44 +152,108 @@
       </div>
     </header>
 
-    <section>
-      <h2>📌 Core Concept & Philosophy</h2>
-      <p>High-level libraries like <code>requests</code> or <code>fetch</code> abstract network communications into a single method call. This project opens that black box to prove that HTTP is fundamentally an unencrypted, human-readable plain-text protocol riding on top of a reliable TCP stream (secured via a TLS handshake for HTTPS).</p>
-      
-      <div class="grid">
-        <div class="card">
-          <h3>🐍 Python (v1: Synchronous)</h3>
-          <p><strong>Standard <code>socket</code> + <code>ssl</code></strong></p>
-          <p>Demonstrates blocking socket streams, explicit byte conversions, manual HTTP header generation, and stateful chunked payload decoding.</p>
-        </div>
-        <div class="card">
-          <h3>⚡ TypeScript (v2: Asynchronous)</h3>
-          <p><strong>Node.js <code>net</code> + <code>tls</code></strong></p>
-          <p>Demonstrates non-blocking, event-driven networking using binary Buffers without invoking higher-level HTTP client interfaces.</p>
-        </div>
-      </div>
-    </section>
+    <main>
+      <section>
+        <h2>📌 Learning Objectives</h2>
+        <p>This assignment strips away the magic of modern HTTP clients. By bypassing high-level libraries like <code>requests</code>, <code>axios</code>, or <code>fetch</code>, we are forced to confront the reality of network programming:</p>
+        <ul>
+          <li><strong>Network Layers:</strong> Understanding how application data (HTTP) is ferried across transport streams (TCP) and secured by encryption protocols (TLS).</li>
+          <li><strong>Protocol Formatting:</strong> Realizing that HTTP is entirely defined by strict plain-text syntax, relying heavily on carriage returns and line feeds (<code>\r\n</code>).</li>
+          <li><strong>Stream Processing:</strong> Handling continuous byte streams, detecting boundaries, and decoding chunked hexadecimal payloads in real-time.</li>
+        </ul>
+      </section>
 
-    <section>
-      <h2>🔍 Raw HTTP Packet Walkthrough</h2>
-      <p>When running a request, this exact string is encoded into bytes and written to the socket:</p>
-      <pre><code>GET /posts/1 HTTP/1.1\r\n
+      <section>
+        <h2>🧰 Dual-Language Architecture</h2>
+        <p>To prove that the underlying network mechanics are independent of any specific programming language, this project features two distinct implementations:</p>
+        <div class="grid">
+          <div class="card">
+            <h3>🐍 Python (v1: Synchronous)</h3>
+            <p><strong>Powered by: <code>socket</code> + <code>ssl</code></strong></p>
+            <p>This implementation uses a traditional blocking I/O model. It opens a socket, wraps it in an SSL context, and sequentially waits for data to arrive. It highlights imperative byte-array manipulation and stateful loops for parsing headers and chunks.</p>
+          </div>
+          <div class="card">
+            <h3>⚡ TypeScript (v2: Asynchronous)</h3>
+            <p><strong>Powered by: <code>net</code> + <code>tls</code></strong></p>
+            <p>This version leverages Node.js's event-driven architecture. Instead of waiting, it attaches listeners to <code>data</code> and <code>end</code> events. It showcases non-blocking memory management using raw binary <code>Buffer</code> objects and slice pointers.</p>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>🧬 The Lifecycle of a Request</h2>
+        <p>When you execute one of the scripts, the following sequence occurs beneath the surface:</p>
+        <ul class="step-list">
+          <li>
+            <div class="step-num">1</div>
+            <div><strong>DNS Resolution:</strong> The hostname (e.g., <code>jsonplaceholder.typicode.com</code>) is resolved to an IP address.</div>
+          </li>
+          <li>
+            <div class="step-num">2</div>
+            <div><strong>TCP Handshake:</strong> A reliable stream is established over Port 80 (HTTP) or Port 443 (HTTPS).</div>
+          </li>
+          <li>
+            <div class="step-num">3</div>
+            <div><strong>TLS Negotiation:</strong> If HTTPS is used, client and server agree on cipher suites and exchange certificates to encrypt the socket.</div>
+          </li>
+          <li>
+            <div class="step-num">4</div>
+            <div><strong>HTTP Request:</strong> The client pushes an exact byte-encoded string across the wire.</div>
+          </li>
+          <li>
+            <div class="step-num">5</div>
+            <div><strong>HTTP Response:</strong> The server replies with a status code, headers, and the payload body.</div>
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>🔍 Inspecting the Raw Data</h2>
+        <h3>The Request String</h3>
+        <p>This is the exact plain-text block our programs inject into the TCP socket:</p>
+        <pre><code>GET /posts/1 HTTP/1.1\r\n
 Host: jsonplaceholder.typicode.com\r\n
-User-Agent: MyRawCurl/1.0\r\n
+User-Agent: RawCurl/1.0\r\n
 Accept: application/json, */*\r\n
 Connection: close\r\n
 \r\n</code></pre>
-      <p>The empty trailing line (<code>\r\n\r\n</code>) serves as the delimiter separating headers from the request payload.</p>
-    </section>
 
-    <section>
-      <h2>🚀 Execution Guide</h2>
-      <pre><code># 1. Run Python Implementation
+        <h3>Decoding "Transfer-Encoding: chunked"</h3>
+        <p>Because we don't use high-level tools, we must manually parse chunked bodies. The server sends data prefixed with the chunk size in hexadecimal:</p>
+        <pre><code>1bf\r\n                 <span style="color: #8b949e;">&lt;-- Hex for 447 bytes</span>
+{"userId": 1, ...}\r\n  <span style="color: #8b949e;">&lt;-- The actual JSON data</span>
+0\r\n                   <span style="color: #8b949e;">&lt;-- Zero means the stream is finished</span>
+\r\n</code></pre>
+        <p>Both our Python and TypeScript clients include custom algorithms to detect the <code>\r\n</code> boundaries, convert the hex size to an integer, extract the exact number of bytes, and reconstruct the full JSON file seamlessly.</p>
+      </section>
+
+      <section>
+        <h2>🚀 Execution & Testing</h2>
+        <p>Run the clients directly from the command line:</p>
+        <pre><code># Python Implementation
 python3 python_curl.py https://jsonplaceholder.typicode.com/posts/1
 
-# 2. Run TypeScript Implementation
+# TypeScript Implementation
 npx tsx ts_curl.ts https://jsonplaceholder.typicode.com/posts/1</code></pre>
-    </section>
+
+        <h3>✅ Automated Test Suite</h3>
+        <p>We've included a <code>test.sh</code> bash script to automatically verify that both the Python and TypeScript clients can successfully parse a standard <code>200 OK</code> response and correctly identify a <code>404 Not Found</code> error.</p>
+        <pre><code>chmod +x test.sh
+./test.sh
+
+=== Running Tests for ts_curl.ts ===
+Test 1 (GET 200 OK): PASSED
+Test 2 (GET 404 Not Found): PASSED
+Test 3 (Python GET 200 OK): PASSED
+=== All Tests Completed ===</code></pre>
+      </section>
+    </main>
+    
+    <footer>
+      <p style="text-align: center; color: #8b949e; margin-top: 3rem; border-top: 1px solid var(--border); padding-top: 1.5rem;">
+        Built for Modern Software Engineering HW1
+      </p>
+    </footer>
   </div>
 </body>
 </html>
