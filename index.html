@@ -22,7 +22,7 @@
       padding: 2rem 1rem;
     }
     .container {
-      max-width: 800px;
+      max-width: 860px;
       margin: 0 auto;
     }
     header {
@@ -32,14 +32,30 @@
     }
     h1 {
       color: #fff;
-      font-size: 2rem;
+      font-size: 2.2rem;
       margin-bottom: 0.5rem;
     }
     h2 {
       color: #fff;
       margin-top: 2rem;
       border-bottom: 1px solid var(--border);
-      padding-bottom: 0.3rem;
+      padding-bottom: 0.4rem;
+    }
+    .author-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem 1.2rem;
+      margin: 1.5rem 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+    .author-item {
+      font-size: 0.95rem;
+    }
+    .author-item strong {
+      color: #fff;
     }
     a {
       color: var(--accent);
@@ -63,7 +79,7 @@
     }
     .badge {
       display: inline-block;
-      padding: 0.2rem 0.6rem;
+      padding: 0.25rem 0.65rem;
       font-size: 0.8rem;
       font-weight: 600;
       border-radius: 20px;
@@ -81,7 +97,7 @@
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: 6px;
-      padding: 1rem;
+      padding: 1.2rem;
     }
     @media (max-width: 600px) {
       .grid { grid-template-columns: 1fr; }
@@ -91,48 +107,54 @@
 <body>
   <div class="container">
     <header>
-      <span class="badge">Modern Software Engineering · HW1</span>
-      <h1>Raw cURL: Understanding HTTP from the Ground Up</h1>
-      <p>A hands-on implementation opening the black box of HTTP using native sockets.</p>
-      <p><a href="https://github.com/samdrcr/se-hw1-curl" target="_blank">View Source Code on GitHub →</a></p>
+      <span class="badge">現代軟體工程 (Modern Software Engineering) · HW1</span>
+      <h1>從殼層到底層：重新理解 HTTP</h1>
+      <p>A ground-up implementation demystifying HTTP over raw TCP/TLS sockets.</p>
+      
+      <div class="author-box">
+        <div class="author-item"><strong>Student Name:</strong> 范權榮</div>
+        <div class="author-item"><strong>Student ID:</strong> 111210557</div>
+        <div class="author-item"><strong>Source Code:</strong> <a href="https://github.com/samdrcr/se-hw1-curl" target="_blank">samdrcr/se-hw1-curl</a></div>
+      </div>
     </header>
 
     <section>
-      <h2>📌 Core Concept</h2>
-      <p>HTTP is not magic—it is simply plain-text strings transferred across a reliable TCP stream (with TLS handling encryption for HTTPS).</p>
+      <h2>📌 Core Concept & Philosophy</h2>
+      <p>High-level libraries like <code>requests</code> or <code>fetch</code> abstract network communications into a single method call. This project opens that black box to prove that HTTP is fundamentally an unencrypted, human-readable plain-text protocol riding on top of a reliable TCP stream (secured via a TLS handshake for HTTPS).</p>
       
       <div class="grid">
         <div class="card">
-          <h3>🐍 Python (v1)</h3>
-          <p><strong>Socket + SSL</strong></p>
-          <p>Implements synchronous, blocking I/O to read and parse chunked HTTP response streams manually.</p>
+          <h3>🐍 Python (v1: Synchronous)</h3>
+          <p><strong>Standard <code>socket</code> + <code>ssl</code></strong></p>
+          <p>Demonstrates blocking socket streams, explicit byte conversions, manual HTTP header generation, and stateful chunked payload decoding.</p>
         </div>
         <div class="card">
-          <h3>⚡ TypeScript (v2)</h3>
-          <p><strong>net + tls Modules</strong></p>
-          <p>Demonstrates event-driven, non-blocking Buffer handling across network streams.</p>
+          <h3>⚡ TypeScript (v2: Asynchronous)</h3>
+          <p><strong>Node.js <code>net</code> + <code>tls</code></strong></p>
+          <p>Demonstrates non-blocking, event-driven networking using binary Buffers without invoking higher-level HTTP client interfaces.</p>
         </div>
       </div>
     </section>
 
     <section>
-      <h2>🚀 Quick Start</h2>
-      <pre><code># Run Python implementation
-python3 python_curl.py https://jsonplaceholder.typicode.com/posts/1
-
-# Run TypeScript implementation
-npx tsx ts_curl.ts https://jsonplaceholder.typicode.com/posts/1</code></pre>
-    </section>
-
-    <section>
-      <h2>🔍 Raw HTTP Packet Inspection</h2>
-      <p>What actually travels over the TCP wire during our request:</p>
+      <h2>🔍 Raw HTTP Packet Walkthrough</h2>
+      <p>When running a request, this exact string is encoded into bytes and written to the socket:</p>
       <pre><code>GET /posts/1 HTTP/1.1\r\n
 Host: jsonplaceholder.typicode.com\r\n
-User-Agent: TSCurl/1.0\r\n
+User-Agent: MyRawCurl/1.0\r\n
 Accept: application/json, */*\r\n
 Connection: close\r\n
 \r\n</code></pre>
+      <p>The empty trailing line (<code>\r\n\r\n</code>) serves as the delimiter separating headers from the request payload.</p>
+    </section>
+
+    <section>
+      <h2>🚀 Execution Guide</h2>
+      <pre><code># 1. Run Python Implementation
+python3 python_curl.py https://jsonplaceholder.typicode.com/posts/1
+
+# 2. Run TypeScript Implementation
+npx tsx ts_curl.ts https://jsonplaceholder.typicode.com/posts/1</code></pre>
     </section>
   </div>
 </body>
