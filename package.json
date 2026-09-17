@@ -1,0 +1,10 @@
+{
+  "name": "hw01-mycurl",
+  "version": "1.0.0",
+  "description": "Raw curl implementation in TypeScript and Python",
+  "devDependencies": {
+    "@types/node": "^20.19.43",
+    "tsx": "^4.0.0",
+    "typescript": "^5.0.0"
+  }
+}
