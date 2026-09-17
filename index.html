@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HW1 · Raw cURL Implementation</title>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --card: #161b22;
+      --border: #30363d;
+      --text: #c9d1d9;
+      --accent: #58a6ff;
+      --code-bg: #0b0e14;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      margin: 0;
+      padding: 2rem 1rem;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    header {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    h1 {
+      color: #fff;
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+    h2 {
+      color: #fff;
+      margin-top: 2rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.3rem;
+    }
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    pre {
+      background-color: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1rem;
+      overflow-x: auto;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      font-size: 0.9rem;
+    }
+    code {
+      font-family: inherit;
+      color: #79c0ff;
+    }
+    .badge {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      border-radius: 20px;
+      background-color: #238636;
+      color: #fff;
+      margin-bottom: 1rem;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1rem;
+    }
+    @media (max-width: 600px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <span class="badge">Modern Software Engineering · HW1</span>
+      <h1>Raw cURL: Understanding HTTP from the Ground Up</h1>
+      <p>A hands-on implementation opening the black box of HTTP using native sockets.</p>
+      <p><a href="https://github.com/samdrcr/se-hw1-curl" target="_blank">View Source Code on GitHub →</a></p>
+    </header>
+
+    <section>
+      <h2>📌 Core Concept</h2>
+      <p>HTTP is not magic—it is simply plain-text strings transferred across a reliable TCP stream (with TLS handling encryption for HTTPS).</p>
+      
+      <div class="grid">
+        <div class="card">
+          <h3>🐍 Python (v1)</h3>
+          <p><strong>Socket + SSL</strong></p>
+          <p>Implements synchronous, blocking I/O to read and parse chunked HTTP response streams manually.</p>
+        </div>
+        <div class="card">
+          <h3>⚡ TypeScript (v2)</h3>
+          <p><strong>net + tls Modules</strong></p>
+          <p>Demonstrates event-driven, non-blocking Buffer handling across network streams.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>🚀 Quick Start</h2>
+      <pre><code># Run Python implementation
+python3 python_curl.py https://jsonplaceholder.typicode.com/posts/1
+
+# Run TypeScript implementation
+npx tsx ts_curl.ts https://jsonplaceholder.typicode.com/posts/1</code></pre>
+    </section>
+
+    <section>
+      <h2>🔍 Raw HTTP Packet Inspection</h2>
+      <p>What actually travels over the TCP wire during our request:</p>
+      <pre><code>GET /posts/1 HTTP/1.1\r\n
+Host: jsonplaceholder.typicode.com\r\n
+User-Agent: TSCurl/1.0\r\n
+Accept: application/json, */*\r\n
+Connection: close\r\n
+\r\n</code></pre>
+    </section>
+  </div>
+</body>
+</html>
